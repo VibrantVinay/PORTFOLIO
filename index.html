@@ -10,7 +10,7 @@
             --primary: #00f3ff; /* Neon Cyan */
             --secondary: #bc13fe; /* Neon Purple */
             --bg-dark: #02040a;
-            --card-bg: rgba(10, 25, 47, 0.85); /* Slightly more opaque for mobile readability */
+            --card-bg: rgba(10, 25, 47, 0.7);
             --text-main: #e2e8f0;
             --text-dim: #94a3b8;
             --border-color: rgba(0, 243, 255, 0.2);
@@ -23,12 +23,16 @@
             font-family: 'Segoe UI', 'Courier New', monospace;
         }
 
+        /* Hide cursor only on desktop where drone exists */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+        }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
-            overflow-x: hidden; /* Crucial for mobile */
-            cursor: default; /* Reset cursor for normal use, hidden only for drone on desktop */
+            overflow-x: hidden;
         }
 
         /* --- BACKGROUND CANVAS --- */
@@ -43,25 +47,23 @@
         }
 
         /* --- DRONE CURSOR (Desktop Only) --- */
-        @media (min-width: 769px) {
-            body { cursor: none; } /* Hide default cursor only on desktop */
-            .drone-cursor {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 40px;
-                height: 40px;
-                pointer-events: none;
-                z-index: 9999;
-                transform: translate(-50%, -50%);
-                transition: transform 0.1s ease-out;
-                will-change: transform, left, top;
-            }
+        .drone-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            will-change: transform, left, top;
+            display: none; /* Hidden by default, shown via media query */
         }
 
-        @media (max-width: 768px) {
-            .drone-cursor { display: none; } /* Hide drone on mobile */
+        /* Show drone only on devices with a mouse */
+        @media (hover: hover) and (pointer: fine) {
+            .drone-cursor { display: block; }
         }
 
         .drone-body {
@@ -116,7 +118,7 @@
         }
 
         .logo {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
             text-transform: uppercase;
@@ -125,15 +127,15 @@
             z-index: 102;
         }
 
-        /* Desktop Nav */
         .nav-links {
             display: flex;
-            gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
             color: var(--text-main);
             text-decoration: none;
+            margin-left: 2rem;
             transition: all 0.3s;
             font-size: 0.9rem;
             text-transform: uppercase;
@@ -161,7 +163,7 @@
             width: 100%;
         }
 
-        /* Hamburger Menu Icon */
+        /* Hamburger Menu */
         .hamburger {
             display: none;
             flex-direction: column;
@@ -177,48 +179,6 @@
             transition: 0.4s;
         }
 
-        /* --- MOBILE NAV STYLES --- */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                height: 100vh;
-                width: 70%;
-                background: rgba(2, 4, 10, 0.98);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: 0.4s ease-in-out;
-                border-left: 1px solid var(--border-color);
-                backdrop-filter: blur(15px);
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-links a {
-                font-size: 1.2rem;
-                margin: 1.5rem 0;
-            }
-
-            /* Hamburger Animation */
-            .hamburger.active .bar:nth-child(1) {
-                transform: rotate(-45deg) translate(-5px, 6px);
-            }
-            .hamburger.active .bar:nth-child(2) {
-                opacity: 0;
-            }
-            .hamburger.active .bar:nth-child(3) {
-                transform: rotate(45deg) translate(-5px, -6px);
-            }
-        }
-
         /* --- HERO SECTION --- */
         .hero {
             min-height: 100vh;
@@ -226,13 +186,12 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8rem 1rem 2rem; /* Adjusted padding */
+            padding: 8rem 1rem 4rem;
             position: relative;
         }
 
         .hero h1 {
-            /* Clamp font size: Minimum 2.5rem, Preferred 8vw, Maximum 5rem */
-            font-size: clamp(2.5rem, 8vw, 5rem); 
+            font-size: 5rem;
             margin-bottom: 1rem;
             color: white;
             text-transform: uppercase;
@@ -241,8 +200,9 @@
             word-wrap: break-word;
         }
 
-        /* Glitch Effect - Simplified clip paths for mobile performance */
+        /* Glitch Effect */
         .glitch-text { position: relative; }
+        
         .glitch-text::before, .glitch-text::after {
             content: attr(data-text);
             position: absolute;
@@ -251,14 +211,15 @@
             width: 100%;
             height: 100%;
             background: var(--bg-dark);
-            opacity: 0.8;
         }
+
         .glitch-text::before {
             left: 2px;
             text-shadow: -2px 0 var(--secondary);
             clip: rect(24px, 550px, 90px, 0);
             animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
+
         .glitch-text::after {
             left: -2px;
             text-shadow: -2px 0 var(--primary);
@@ -274,6 +235,7 @@
             80% { clip: rect(18px, 9999px, 62px, 0); }
             100% { clip: rect(81px, 9999px, 19px, 0); }
         }
+
         @keyframes glitch-anim-2 {
             0% { clip: rect(65px, 9999px, 100px, 0); }
             20% { clip: rect(12px, 9999px, 2px, 0); }
@@ -284,7 +246,7 @@
         }
 
         .hero p {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             color: var(--text-dim);
             max-width: 800px;
             margin: 0 auto 2rem;
@@ -300,31 +262,45 @@
             color: var(--primary);
             text-decoration: none;
             border: 1px solid var(--primary);
+            border-radius: 0;
             font-weight: bold;
             transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 2px;
             position: relative;
             overflow: hidden;
-            font-size: 0.9rem;
+            cursor: pointer;
         }
-        
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
         .btn:hover {
             color: var(--bg-dark);
-            background: var(--primary); /* Simpler hover for mobile */
             box-shadow: 0 0 20px var(--primary);
         }
 
+        .btn:hover::before { left: 0; }
+
         /* --- SECTIONS --- */
         section {
-            padding: 4rem 1.5rem; /* Reduced padding for mobile */
+            padding: 6rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         h2 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 3rem;
+            font-size: 3rem;
+            margin-bottom: 4rem;
             text-align: center;
             color: white;
             text-transform: uppercase;
@@ -333,10 +309,10 @@
 
         h2 span { color: var(--primary); }
 
-        /* --- CARDS --- */
+        /* --- CARDS (Glassmorphism) --- */
         .skill-category, .project-card, .timeline-item {
             background: var(--card-bg);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 5px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(5px);
@@ -356,41 +332,68 @@
             border-left: 2px solid var(--primary);
         }
 
+        .skill-category:hover, .project-card:hover, .timeline-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
         /* --- SKILLS --- */
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
+        }
+
+        .skill-category h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .tag {
             background: rgba(255, 255, 255, 0.05);
-            padding: 0.3rem 0.6rem;
+            padding: 0.4rem 0.8rem;
             border: 1px solid var(--border-color);
             color: var(--primary);
-            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
             display: inline-block;
             margin: 0.2rem;
+            transition: 0.2s;
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
         }
 
         /* --- PROJECTS --- */
         .project-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Stack by default on mobile */
-            gap: 2rem;
-        }
-        @media(min-width: 768px) {
-            .project-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            }
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
         }
 
         .project-date {
-            display: block;
-            margin: 5px 0 10px 0;
             color: var(--secondary);
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badge {
+            font-size: 0.75rem;
+            color: var(--primary);
+            border: 1px solid var(--secondary);
+            padding: 0.2rem 0.6rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
         }
 
         /* --- TIMELINE --- */
@@ -400,51 +403,37 @@
             margin: 0 auto;
         }
 
-        /* Vertical Line - Only show on larger screens */
-        @media (min-width: 768px) {
-            .timeline::before {
-                content: '';
-                position: absolute;
-                left: -2px;
-                top: 0;
-                width: 2px;
-                height: 100%;
-                background: linear-gradient(to bottom, var(--primary), var(--secondary));
-                opacity: 0.3;
-            }
-            .timeline-item {
-                margin-left: 1.5rem; /* Indent on desktop */
-            }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            opacity: 0.3;
         }
-        
+
         .timeline-item {
             margin-bottom: 2rem;
             border-left: 3px solid var(--primary);
         }
 
-        .timeline-header {
+        .role-title { font-weight: bold; font-size: 1.2rem; }
+        .company { color: var(--primary); text-shadow: 0 0 5px rgba(0, 243, 255, 0.3); }
+
+        /* --- EDUCATION --- */
+        .cert-list li {
+            list-style: none;
+            margin-bottom: 0.8rem;
             display: flex;
-            flex-direction: column;
-        }
-        
-        @media(min-width: 600px) {
-            .timeline-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+            align-items: start;
         }
 
-        .role-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .company {
-            color: var(--primary);
-            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
-            font-size: 0.95rem;
+        .cert-list li i {
+            color: var(--secondary);
+            margin-right: 10px;
+            margin-top: 5px;
         }
 
         /* --- FOOTER --- */
@@ -455,24 +444,67 @@
             border-top: 1px solid var(--border-color);
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
+        .social-links { margin-top: 1.5rem; }
+        
         .social-links a {
             color: var(--text-dim);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            margin: 0 1rem;
             transition: all 0.3s;
+            display: inline-block;
         }
 
         .social-links a:hover {
             color: var(--primary);
-            transform: scale(1.1);
+            transform: scale(1.2);
+            text-shadow: 0 0 15px var(--primary);
         }
 
+        /* --- MOBILE MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; padding-left: 0.5rem; }
+            h2 { font-size: 2rem; margin-bottom: 2rem; }
+            
+            .hamburger { display: flex; }
+
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 70%;
+                background: rgba(2, 4, 10, 0.95);
+                flex-direction: column;
+                justify-content: center;
+                transition: 0.4s;
+                backdrop-filter: blur(15px);
+                border-left: 1px solid var(--primary);
+                box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+                z-index: 101;
+            }
+
+            .nav-links.active { right: 0; }
+
+            .nav-links a {
+                margin: 2rem 0;
+                font-size: 1.2rem;
+            }
+
+            .timeline::before { display: none; }
+            
+            .timeline-item {
+                border-left: 1px solid var(--primary); /* Maintain card look */
+                margin-left: 0;
+            }
+
+            .project-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr; }
+            
+            section { padding: 4rem 1rem; }
+            
+            .btn { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -490,19 +522,18 @@
     <nav>
         <div class="nav-content">
             <div class="logo">&lt;Vinay_AI /&gt;</div>
-            
-            <div class="hamburger">
+            <div class="hamburger" onclick="toggleMenu()">
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
-
             <div class="nav-links">
-                <a href="#about">01. Initialize</a>
-                <a href="#skills">02. Arsenal</a>
-                <a href="#projects">03. Protocols</a>
-                <a href="#experience">04. Logs</a>
-                <a href="#contact">05. Connect</a>
+                <a href="#about" onclick="toggleMenu()">01. Initialize</a>
+                <a href="#skills" onclick="toggleMenu()">02. Arsenal</a>
+                <a href="#projects" onclick="toggleMenu()">03. Protocols</a>
+                <a href="#experience" onclick="toggleMenu()">04. Logs</a>
+                <a href="#education" onclick="toggleMenu()">05. Data</a>
+                <a href="#contact" onclick="toggleMenu()">06. Connect</a>
             </div>
         </div>
     </nav>
@@ -510,7 +541,7 @@
     <header class="hero" id="about">
         <div>
             <h1 class="glitch-text" data-text="Vinayakrishnan C">Vinayakrishnan C</h1>
-            <h2 style="font-size: clamp(1rem, 3vw, 1.5rem); color: var(--primary); margin-top: -10px; margin-bottom: 20px;">AI & Data Science Engineer</h2>
+            <h2 style="font-size: 1.5rem; color: var(--primary); margin-top: -10px; margin-bottom: 20px; letter-spacing: 1px;">AI & Data Science Engineer</h2>
             <p>Passionate about Deep Learning, Computer Vision, and Natural Language Processing. Developing cutting-edge AI solutions from concept to deployment.</p>
             <a href="#projects" class="btn">Execute Portfolio</a>
         </div>
@@ -632,6 +663,11 @@
                 </div>
                 <span class="project-date">May 2025 - Jun 2025 · Full-time</span>
                 <p>Designed multiple AI/ML projects (Rainfall estimation & E-nose). Developed complete AI pipelines from sensor data collection to model deployment using STFT, LSTM, and TensorFlow Lite.</p>
+                <div class="project-tech">
+                    <span class="tech-badge">Edge AI</span>
+                    <span class="tech-badge">Sensor Fusion</span>
+                    <span class="tech-badge">TensorFlow</span>
+                </div>
             </div>
 
             <div class="timeline-item">
@@ -669,27 +705,14 @@
             
             <div class="timeline-item">
                 <h3><i class="fas fa-certificate"></i> Certifications</h3>
-                <ul class="cert-list" style="margin-top: 1rem; list-style: none;">
-                    <li style="margin-bottom: 0.8rem; display: flex; gap: 10px;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-top: 4px;"></i> 
-                        <span>IJSREM Recognition on "AI-powered Solar Tracker"</span>
-                    </li>
-                    <li style="margin-bottom: 0.8rem; display: flex; gap: 10px;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-top: 4px;"></i>
-                        <span>AWS APAC - Solutions Architecture Job Simulation</span>
-                    </li>
-                    <li style="margin-bottom: 0.8rem; display: flex; gap: 10px;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-top: 4px;"></i>
-                        <span>Data Science & AI Distinction (iStep/Deakin Univ)</span>
-                    </li>
-                    <li style="margin-bottom: 0.8rem; display: flex; gap: 10px;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-top: 4px;"></i>
-                        <span>Deloitte Australia - Data Analytics Job Simulation</span>
-                    </li>
-                    <li style="margin-bottom: 0.8rem; display: flex; gap: 10px;">
-                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-top: 4px;"></i>
-                        <span>Robotics based Applications (Plasmid Innovations)</span>
-                    </li>
+                <ul class="cert-list" style="margin-top: 1rem;">
+                    <li><i class="fas fa-check-circle"></i> IJSREM Recognition on "AI-powered Solar Tracker"</li>
+                    <li><i class="fas fa-check-circle"></i> AWS APAC - Solutions Architecture Job Simulation</li>
+                    <li><i class="fas fa-check-circle"></i> Data Science & AI Distinction (iStep/Deakin Univ)</li>
+                    <li><i class="fas fa-check-circle"></i> Deloitte Australia - Data Analytics Job Simulation</li>
+                    <li><i class="fas fa-check-circle"></i> Tata Group - Data Viz Job Simulation</li>
+                    <li><i class="fas fa-check-circle"></i> Robotics based Applications (Plasmid)</li>
+                    <li><i class="fas fa-check-circle"></i> AI Expert Certification (Intrainz)</li>
                 </ul>
             </div>
         </div>
@@ -697,7 +720,7 @@
 
     <footer id="contact">
         <h2>Establish <span>Connection</span></h2>
-        <p>Awaiting input for challenging AI solutions.</p>
+        <p>Awaiting input for challenging AI solutions</p>
         
         <div class="social-links">
             <a href="mailto:vinayakrishnanc@gmail.com"><i class="fas fa-envelope"></i></a>
@@ -709,56 +732,51 @@
     </footer>
 
     <script>
-        // --- MOBILE MENU TOGGLE ---
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-        const links = document.querySelectorAll('.nav-links a');
-
-        hamburger.addEventListener('click', () => {
+        // --- MOBILE MENU LOGIC ---
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
             navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
-
-        // Close menu when a link is clicked
-        links.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                hamburger.classList.remove('active');
-            });
-        });
-
-        // --- DRONE CURSOR LOGIC (Desktop Only) ---
-        // Only run this logic if screen width > 768px
-        if (window.innerWidth > 768) {
-            const drone = document.querySelector('.drone-cursor');
-            let mouseX = 0;
-            let mouseY = 0;
-            let droneX = 0;
-            let droneY = 0;
-            
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            function animateDrone() {
-                let distX = mouseX - droneX;
-                let distY = mouseY - droneY;
-                
-                droneX = droneX + (distX * 0.1);
-                droneY = droneY + (distY * 0.1);
-                
-                let rotateX = distY * 0.1;
-                let rotateY = distX * 0.1;
-
-                drone.style.left = droneX + 'px';
-                drone.style.top = droneY + 'px';
-                drone.style.transform = `translate(-50%, -50%) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-                
-                requestAnimationFrame(animateDrone);
-            }
-            animateDrone();
         }
+
+        // --- DRONE CURSOR LOGIC ---
+        const drone = document.querySelector('.drone-cursor');
+        
+        let mouseX = 0;
+        let mouseY = 0;
+        let droneX = 0;
+        let droneY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateDrone() {
+            // Only calculate if visible
+            if (getComputedStyle(drone).display === 'none') {
+                requestAnimationFrame(animateDrone);
+                return;
+            }
+
+            // Smooth follow (Lerp)
+            let distX = mouseX - droneX;
+            let distY = mouseY - droneY;
+            
+            droneX = droneX + (distX * 0.1);
+            droneY = droneY + (distY * 0.1);
+            
+            // Calculate rotation based on movement
+            let rotateX = distY * 0.1;
+            let rotateY = distX * 0.1;
+
+            drone.style.left = droneX + 'px';
+            drone.style.top = droneY + 'px';
+            drone.style.transform = `translate(-50%, -50%) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+            
+            requestAnimationFrame(animateDrone);
+        }
+        animateDrone();
 
 
         // --- NEURAL NETWORK BACKGROUND CANVAS ---
@@ -771,10 +789,10 @@
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
+            initParticles(); // Re-init on resize to adjust density
         }
         
         window.addEventListener('resize', resize);
-        resize();
         
         class Particle {
             constructor() {
@@ -788,6 +806,7 @@
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
+                
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
             }
@@ -800,12 +819,16 @@
             }
         }
         
-        // Optimize particle count for mobile
-        const particleCount = window.innerWidth < 768 ? 30 : 70;
-
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+        function initParticles() {
+            particles = [];
+            // Reduce particles on mobile for performance
+            const particleCount = window.innerWidth < 768 ? 35 : 70;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
         }
+        
+        resize(); // Initial call
         
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
@@ -814,6 +837,7 @@
                 particles[i].update();
                 particles[i].draw();
                 
+                // Draw connections (Neural Network style)
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
