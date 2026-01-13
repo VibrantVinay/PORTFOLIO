@@ -7,37 +7,96 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #0ea5e9;
-            --secondary: #6366f1;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --text-gray: #94a3b8;
-            --card-bg: #1e293b;
+            --primary: #00f3ff; /* Neon Cyan */
+            --secondary: #bc13fe; /* Neon Purple */
+            --bg-dark: #02040a;
+            --card-bg: rgba(10, 25, 47, 0.7);
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border-color: rgba(0, 243, 255, 0.2);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            cursor: none; /* Hide default cursor for the drone */
         }
 
         body {
-            background-color: var(--dark);
-            color: var(--light);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Navigation */
+        /* --- BACKGROUND CANVAS --- */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0f1c 0%, #000000 100%);
+        }
+
+        /* --- DRONE CURSOR --- */
+        .drone-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            will-change: transform, left, top;
+        }
+
+        .drone-body {
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .rotor {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 2px dashed var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.5s linear infinite;
+        }
+
+        .rotor:nth-child(1) { top: -12px; left: -12px; }
+        .rotor:nth-child(2) { top: -12px; right: -12px; }
+        .rotor:nth-child(3) { bottom: -12px; left: -12px; }
+        .rotor:nth-child(4) { bottom: -12px; right: -12px; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- NAVIGATION --- */
         nav {
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(2, 4, 10, 0.8);
             padding: 1.5rem;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 30px rgba(0, 243, 255, 0.1);
         }
 
         .nav-content {
@@ -52,277 +111,367 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary);
         }
 
         .nav-links a {
-            color: var(--light);
+            color: var(--text-main);
             text-decoration: none;
             margin-left: 2rem;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--primary);
+            text-shadow: 0 0 8px var(--primary);
         }
 
-        /* Hero Section */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- HERO SECTION --- */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 0 1rem;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            padding: 8rem 1rem 0;
+            position: relative;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             margin-bottom: 1rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Glitch Effect */
+        .glitch-text {
+            position: relative;
+        }
+        
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--secondary);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--primary);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(11px, 9999px, 89px, 0); }
+            20% { clip: rect(68px, 9999px, 11px, 0); }
+            40% { clip: rect(35px, 9999px, 140px, 0); }
+            60% { clip: rect(93px, 9999px, 45px, 0); }
+            80% { clip: rect(18px, 9999px, 62px, 0); }
+            100% { clip: rect(81px, 9999px, 19px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(12px, 9999px, 2px, 0); }
+            40% { clip: rect(89px, 9999px, 45px, 0); }
+            60% { clip: rect(10px, 9999px, 83px, 0); }
+            80% { clip: rect(120px, 9999px, 5px, 0); }
+            100% { clip: rect(2px, 9999px, 34px, 0); }
         }
 
         .hero p {
             font-size: 1.5rem;
-            color: var(--text-gray);
+            color: var(--text-dim);
             max-width: 800px;
             margin: 0 auto 2rem;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+            text-align: left;
         }
 
         .btn {
             display: inline-block;
-            padding: 1rem 2rem;
-            background: var(--primary);
-            color: white;
+            padding: 1rem 3rem;
+            background: transparent;
+            color: var(--primary);
             text-decoration: none;
-            border-radius: 5px;
+            border: 1px solid var(--primary);
+            border-radius: 0;
             font-weight: bold;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: left 0.3s;
+            z-index: -1;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--primary);
         }
 
-        /* Sections General */
+        .btn:hover::before {
+            left: 0;
+        }
+
+        /* --- SECTIONS --- */
         section {
-            padding: 5rem 1rem;
+            padding: 6rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         h2 {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
+            font-size: 3rem;
+            margin-bottom: 4rem;
             text-align: center;
-            position: relative;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
 
-        h2::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 4px;
-            background: var(--primary);
-            margin: 10px auto 0;
+        h2 span {
+            color: var(--primary);
         }
 
-        /* Skills */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .skill-category {
+        /* --- CARDS (Glassmorphism) --- */
+        .skill-category, .project-card, .timeline-item {
             background: var(--card-bg);
             padding: 2rem;
-            border-radius: 10px;
-            border: 1px solid #334155;
+            border-radius: 5px; /* Boxier for robot feel */
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Tech corner accents */
+        .skill-category::before, .project-card::before, .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        .skill-category:hover, .project-card:hover, .timeline-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
+        /* --- SKILLS --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
 
         .skill-category h3 {
             color: var(--primary);
             margin-bottom: 1rem;
-        }
-
-        .tags {
+            font-family: 'Courier New', monospace;
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 10px;
         }
 
         .tag {
-            background: #334155;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 0.2rem;
         }
 
-        /* Projects */
+        .tag:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* --- PROJECTS --- */
         .project-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            border: 1px solid #334155;
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .project-content {
-            padding: 1.5rem;
-        }
-
-        .project-content h3 {
-            margin-bottom: 0.5rem;
-            color: var(--light);
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
         }
 
         .project-date {
-            color: var(--primary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .project-tech {
-            margin-top: 1rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            color: var(--secondary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
         }
 
         .tech-badge {
-            font-size: 0.8rem;
-            color: var(--secondary);
-            background: rgba(99, 102, 241, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            border: 1px solid var(--secondary);
+            padding: 0.2rem 0.6rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
         }
 
-        /* Experience Timeline */
+        /* --- TIMELINE --- */
         .timeline {
             position: relative;
             max-width: 900px;
             margin: 0 auto;
         }
 
-        .timeline-item {
-            padding: 2rem;
-            background: var(--card-bg);
-            margin-bottom: 2rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            opacity: 0.3;
         }
 
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
+        .timeline-item {
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--primary);
         }
 
         .company {
-            font-weight: bold;
             color: var(--primary);
-        }
-        
-        .role-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--light);
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
         }
 
-        .exp-location {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        /* Education & Certs */
-        .edu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
+        /* --- EDUCATION --- */
         .cert-list li {
-            margin-bottom: 0.5rem;
             list-style: none;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: start;
         }
-        
+
         .cert-list li i {
-            color: var(--primary);
+            color: var(--secondary);
             margin-right: 10px;
+            margin-top: 5px;
         }
 
-        /* Footer */
+        /* --- FOOTER --- */
         footer {
-            background: #020617;
-            padding: 3rem 1rem;
+            background: #000;
+            padding: 4rem 1rem;
             text-align: center;
-            margin-top: 5rem;
-        }
-
-        .social-links {
-            margin-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
         }
 
         .social-links a {
-            color: var(--light);
-            font-size: 1.5rem;
-            margin: 0 1rem;
-            transition: color 0.3s;
+            color: var(--text-dim);
+            font-size: 1.8rem;
+            margin: 0 1.5rem;
+            transition: all 0.3s;
         }
 
         .social-links a:hover {
             color: var(--primary);
+            transform: scale(1.2);
+            text-shadow: 0 0 15px var(--primary);
         }
 
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .nav-links { display: none; }
+            .timeline::before { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="drone-cursor">
+        <div class="rotor"></div>
+        <div class="rotor"></div>
+        <div class="rotor"></div>
+        <div class="rotor"></div>
+        <div class="drone-body"></div>
+    </div>
+
     <nav>
         <div class="nav-content">
-            <div class="logo">Vinayakrishnan C</div>
+            <div class="logo">&lt;Vinay_AI /&gt;</div>
             <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="#experience">Experience</a>
-                <a href="#contact">Contact</a>
+                <a href="#about">01. Initialize</a>
+                <a href="#skills">02. Arsenal</a>
+                <a href="#projects">03. Protocols</a>
+                <a href="#experience">04. Logs</a>
+                <a href="#contact">05. Connect</a>
             </div>
         </div>
     </nav>
 
     <header class="hero" id="about">
         <div>
-            <h1>AI & Data Science Engineer</h1>
-            <p>Passionate about Deep Learning, Computer Vision, and Natural Language Processing. Experienced in developing cutting-edge AI solutions from concept to deployment.</p>
-            <a href="#projects" class="btn">View My Work</a>
+            <h1 class="glitch-text" data-text="Vinayakrishnan C">Vinayakrishnan C</h1>
+            <h2 style="font-size: 1.5rem; color: var(--primary); margin-top: -20px; margin-bottom: 20px;">AI & Data Science Engineer</h2>
+            <p>Passionate about Deep Learning, Computer Vision, and Natural Language Processing. Developing cutting-edge AI solutions from concept to deployment.</p>
+            <a href="#projects" class="btn">Execute Portfolio</a>
         </div>
     </header>
 
     <section id="skills">
-        <h2>Technical Arsenal</h2>
+        <h2>Technical <span>Arsenal</span></h2>
         <div class="skills-grid">
             <div class="skill-category">
                 <h3><i class="fas fa-code"></i> Languages</h3>
@@ -350,7 +499,7 @@
                 </div>
             </div>
             <div class="skill-category">
-                <h3><i class="fas fa-tools"></i> Tools & Hardware</h3>
+                <h3><i class="fas fa-microchip"></i> Tools & Hardware</h3>
                 <div class="tags">
                     <span class="tag">Git</span>
                     <span class="tag">Docker</span>
@@ -365,7 +514,7 @@
     </section>
 
     <section id="projects">
-        <h2>Featured Projects</h2>
+        <h2>Deployed <span>Protocols</span></h2>
         <div class="project-grid">
             <div class="project-card">
                 <div class="project-content">
@@ -409,7 +558,7 @@
     </section>
 
     <section id="experience">
-        <h2>Professional Experience</h2>
+        <h2>System <span>Logs</span></h2>
         <div class="timeline">
             
             <div class="timeline-item">
@@ -419,7 +568,7 @@
                 </div>
                 <span class="project-date">Mar 2025 - Present · Full-time</span>
                 <span class="exp-location">Chemperi, Kannur · On-site</span>
-                <p>Successfully conducted multiple events under FOSS Club VJEC and made the students open up to open source innovations. Led team collaboration, event planning, and hybrid teamwork management.</p>
+                <p>Successfully conducted multiple events under FOSS Club VJEC. Led team collaboration, event planning, and hybrid teamwork management.</p>
             </div>
 
             <div class="timeline-item">
@@ -428,8 +577,7 @@
                     <span class="company">Vimal Jyothi Engineering College</span>
                 </div>
                 <span class="project-date">Sep 2025 - Oct 2025 · Part-time</span>
-                <span class="exp-location">Kannur, Kerala · On-site</span>
-                <p>Conducted and Coordinated Tantra’25 technical fest. Demonstrated strong cross-functional team leadership, team coordination, and motivation skills.</p>
+                <p>Conducted and Coordinated Tantra’25 technical fest. Demonstrated strong cross-functional team leadership.</p>
             </div>
 
             <div class="timeline-item">
@@ -438,30 +586,12 @@
                     <span class="company">ICFOSS</span>
                 </div>
                 <span class="project-date">May 2025 - Jun 2025 · Full-time</span>
-                <span class="exp-location">Thiruvananthapuram, Kerala · On-site</span>
-                <p>Designed and implemented multiple AI/ML-based projects with a focus on rainfall estimation and artificial nose (e-nose) development.</p>
-                <ul style="margin: 1rem 0; padding-left: 1.2rem; font-size: 0.95rem; color: var(--text-gray);">
-                    <li><strong>Rainfall Estimation:</strong> Applied Short-Time Fourier Transform (STFT) to convert rain audio into spectrograms. Developed hybrid CNN-LSTM models (Conv1D/2D, LSTM) to optimize R² score and MAPE.</li>
-                    <li><strong>Artificial Nose:</strong> Collected environmental data using BME680 sensors and Arduino Uno. Built TensorFlow models optimized with TensorFlow Lite for deployment on Wio Terminal.</li>
-                    <li><strong>Pipeline:</strong> Developed complete AI pipelines from sensor data collection to model deployment, employing preprocessing like standardization and dropout.</li>
-                </ul>
+                <p>Designed multiple AI/ML projects (Rainfall estimation & E-nose). Developed complete AI pipelines from sensor data collection to model deployment using STFT, LSTM, and TensorFlow Lite.</p>
                 <div class="project-tech">
                     <span class="tech-badge">Edge AI</span>
                     <span class="tech-badge">Sensor Fusion</span>
-                    <span class="tech-badge">STFT</span>
-                    <span class="tech-badge">BiLSTM</span>
                     <span class="tech-badge">TensorFlow</span>
                 </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-header">
-                    <div class="role-title">Event Coordinator (Tantra'24)</div>
-                    <span class="company">Vimal Jyothi Engineering College</span>
-                </div>
-                <span class="project-date">Nov 2024 · Part-time</span>
-                <span class="exp-location">Kannur, Kerala</span>
-                <p>Served as the Coordinator for Tantra '24, managing logistics and event execution.</p>
             </div>
 
             <div class="timeline-item">
@@ -470,18 +600,7 @@
                     <span class="company">Plasmid</span>
                 </div>
                 <span class="project-date">Jul 2024 - Sep 2024 · Part-time</span>
-                <span class="exp-location">Remote</span>
-                <p>Designed two projects in the field of Robotics. Gained experience in Robotic Arm implementation, Robotic Process Automation (RPA), and Robot Frameworks.</p>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-header">
-                    <div class="role-title">Volunteer</div>
-                    <span class="company">Vimal Jyothi Engineering College</span>
-                </div>
-                <span class="project-date">Dec 2023 · Part-time</span>
-                <span class="exp-location">Kannur, Kerala · On-site</span>
-                <p>Volunteered for the ADS department during Tantra'23. Applied Knowledge Engineering and Java skills.</p>
+                <p>Designed Robotic Arm implementation and RPA projects. Gained experience in Robot Frameworks.</p>
             </div>
 
             <div class="timeline-item">
@@ -490,15 +609,14 @@
                     <span class="company">Intrainz</span>
                 </div>
                 <span class="project-date">Jul 2023 - Sep 2023 · Part-time</span>
-                <span class="exp-location">Remote</span>
-                <p>Developed major and minor projects on Spam News Detection and Handwritten Digit Recognition using Python and Supervised Learning techniques.</p>
+                <p>Developed Spam News Detection and Handwritten Digit Recognition using Python and Supervised Learning.</p>
             </div>
 
         </div>
     </section>
 
     <section id="education">
-        <h2>Education & Certifications</h2>
+        <h2>Database & <span>Certs</span></h2>
         <div class="edu-grid">
             <div class="timeline-item">
                 <h3><i class="fas fa-graduation-cap"></i> Education</h3>
@@ -522,8 +640,8 @@
     </section>
 
     <footer id="contact">
-        <h2>Let's Connect</h2>
-        <p>Currently seeking challenging roles to develop cutting-edge AI solutions.</p>
+        <h2>Establish <span>Connection</span></h2>
+        <p>Awaiting input for challenging AI solutions.</p>
         
         <div class="social-links">
             <a href="mailto:vinayakrishnanc@gmail.com"><i class="fas fa-envelope"></i></a>
@@ -531,8 +649,116 @@
             <a href="https://github.com/VibrantVinay"><i class="fab fa-github"></i></a>
             <a href="https://gitlab.com/vinay20041"><i class="fab fa-gitlab"></i></a>
         </div>
-        <p style="margin-top: 2rem; font-size: 0.8rem; color: #475569;">© 2025 Vinayakrishnan C. All Rights Reserved.</p>
+        <p style="margin-top: 2rem; font-size: 0.8rem; color: #475569;">© 2025 Vinayakrishnan C. System Online.</p>
     </footer>
 
+    <script>
+        // --- DRONE CURSOR LOGIC ---
+        const drone = document.querySelector('.drone-cursor');
+        
+        let mouseX = 0;
+        let mouseY = 0;
+        let droneX = 0;
+        let droneY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateDrone() {
+            // Smooth follow (Lerp)
+            let distX = mouseX - droneX;
+            let distY = mouseY - droneY;
+            
+            droneX = droneX + (distX * 0.1);
+            droneY = droneY + (distY * 0.1);
+            
+            // Calculate rotation based on movement
+            let rotateX = distY * 0.1;
+            let rotateY = distX * 0.1;
+
+            drone.style.left = droneX + 'px';
+            drone.style.top = droneY + 'px';
+            drone.style.transform = `translate(-50%, -50%) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+            
+            requestAnimationFrame(animateDrone);
+        }
+        animateDrone();
+
+
+        // --- NEURAL NETWORK BACKGROUND CANVAS ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resize);
+        resize();
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.5; // Velocity X
+                this.vy = (Math.random() - 0.5) * 1.5; // Velocity Y
+                this.size = Math.random() * 2 + 1;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f3ff';
+                ctx.fill();
+            }
+        }
+        
+        // Create particles
+        for (let i = 0; i < 70; i++) {
+            particles.push(new Particle());
+        }
+        
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Draw connections (Neural Network style)
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${1 - distance / 150})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+    </script>
 </body>
 </html>
