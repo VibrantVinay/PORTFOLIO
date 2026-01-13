@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinayakrishnan C | AI & DS Engineer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --secondary: #6366f1;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --text-gray: #94a3b8;
+            --card-bg: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1rem;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-gray);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Sections General */
+        section {
+            padding: 5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: var(--primary);
+            margin: 10px auto 0;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #334155;
+        }
+
+        .skill-category h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Projects */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid #334155;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .project-date {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .project-tech {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-badge {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* Experience Timeline */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            padding: 2rem;
+            background: var(--card-bg);
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .company {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .role-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .exp-location {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Education & Certs */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .cert-list li {
+            margin-bottom: 0.5rem;
+            list-style: none;
+        }
+        
+        .cert-list li i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: #020617;
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+
+        .social-links {
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--light);
+            font-size: 1.5rem;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-content">
+            <div class="logo">Vinayakrishnan C</div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" id="about">
+        <div>
+            <h1>AI & Data Science Engineer</h1>
+            <p>Passionate about Deep Learning, Computer Vision, and Natural Language Processing. Experienced in developing cutting-edge AI solutions from concept to deployment.</p>
+            <a href="#projects" class="btn">View My Work</a>
+        </div>
+    </header>
+
+    <section id="skills">
+        <h2>Technical Arsenal</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3><i class="fas fa-code"></i> Languages</h3>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">C</span>
+                    <span class="tag">R</span>
+                    <span class="tag">SQL</span>
+                    <span class="tag">MATLAB</span>
+                    <span class="tag">HTML/CSS</span>
+                    <span class="tag">Java</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fas fa-brain"></i> AI/ML Frameworks</h3>
+                <div class="tags">
+                    <span class="tag">TensorFlow</span>
+                    <span class="tag">PyTorch</span>
+                    <span class="tag">Keras</span>
+                    <span class="tag">CNN</span>
+                    <span class="tag">LSTM</span>
+                    <span class="tag">NLP</span>
+                    <span class="tag">STFT</span>
+                    <span class="tag">Scikit-learn</span>
+                </div>
+            </div>
+            <div class="skill-category">
+                <h3><i class="fas fa-tools"></i> Tools & Hardware</h3>
+                <div class="tags">
+                    <span class="tag">Git</span>
+                    <span class="tag">Docker</span>
+                    <span class="tag">Arduino</span>
+                    <span class="tag">Raspberry Pi</span>
+                    <span class="tag">BME680</span>
+                    <span class="tag">Pandas</span>
+                    <span class="tag">NumPy</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>Featured Projects</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <div class="project-content">
+                    <h3>Artificial Nose for Odour Detection</h3>
+                    <span class="project-date">May 2025 - June 2025</span>
+                    <p>Designed a Hardware + ML solution using BME680 sensors and Arduino. Trained a custom CNN model converted to TFLite for edge deployment.</p>
+                    <div class="project-tech">
+                        <span class="tech-badge">TensorFlow Lite</span>
+                        <span class="tech-badge">Arduino</span>
+                        <span class="tech-badge">CNN</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-content">
+                    <h3>Smart Rain Gauge System</h3>
+                    <span class="project-date">May 2025 - June 2025</span>
+                    <p>Developed a hybrid STFT + LSTM deep learning architecture to analyze rainfall audio data. Collaborated with ICFOSS for field testing.</p>
+                    <div class="project-tech">
+                        <span class="tech-badge">Python</span>
+                        <span class="tech-badge">LSTM</span>
+                        <span class="tech-badge">STFT</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-content">
+                    <h3>Automated Solar Tracking System</h3>
+                    <span class="project-date">Dec 2024 - March 2025</span>
+                    <p>Designed a smart tracker predicting optimal panel orientation. Implemented Linear Regression and Decision Trees for sun angle calculation.</p>
+                    <div class="project-tech">
+                        <span class="tech-badge">Scikit-learn</span>
+                        <span class="tech-badge">Tkinter</span>
+                        <span class="tech-badge">Arduino</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience">
+        <h2>Professional Experience</h2>
+        <div class="timeline">
+            
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Chief FOSS Ambassador</div>
+                    <span class="company">Vimal Jyothi Engineering College (VJEC)</span>
+                </div>
+                <span class="project-date">Mar 2025 - Present · Full-time</span>
+                <span class="exp-location">Chemperi, Kannur · On-site</span>
+                <p>Successfully conducted multiple events under FOSS Club VJEC and made the students open up to open source innovations. Led team collaboration, event planning, and hybrid teamwork management.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Event Coordinator (Tantra’25)</div>
+                    <span class="company">Vimal Jyothi Engineering College</span>
+                </div>
+                <span class="project-date">Sep 2025 - Oct 2025 · Part-time</span>
+                <span class="exp-location">Kannur, Kerala · On-site</span>
+                <p>Conducted and Coordinated Tantra’25 technical fest. Demonstrated strong cross-functional team leadership, team coordination, and motivation skills.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Edge AI Intern</div>
+                    <span class="company">ICFOSS</span>
+                </div>
+                <span class="project-date">May 2025 - Jun 2025 · Full-time</span>
+                <span class="exp-location">Thiruvananthapuram, Kerala · On-site</span>
+                <p>Designed and implemented multiple AI/ML-based projects with a focus on rainfall estimation and artificial nose (e-nose) development.</p>
+                <ul style="margin: 1rem 0; padding-left: 1.2rem; font-size: 0.95rem; color: var(--text-gray);">
+                    <li><strong>Rainfall Estimation:</strong> Applied Short-Time Fourier Transform (STFT) to convert rain audio into spectrograms. Developed hybrid CNN-LSTM models (Conv1D/2D, LSTM) to optimize R² score and MAPE.</li>
+                    <li><strong>Artificial Nose:</strong> Collected environmental data using BME680 sensors and Arduino Uno. Built TensorFlow models optimized with TensorFlow Lite for deployment on Wio Terminal.</li>
+                    <li><strong>Pipeline:</strong> Developed complete AI pipelines from sensor data collection to model deployment, employing preprocessing like standardization and dropout.</li>
+                </ul>
+                <div class="project-tech">
+                    <span class="tech-badge">Edge AI</span>
+                    <span class="tech-badge">Sensor Fusion</span>
+                    <span class="tech-badge">STFT</span>
+                    <span class="tech-badge">BiLSTM</span>
+                    <span class="tech-badge">TensorFlow</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Event Coordinator (Tantra'24)</div>
+                    <span class="company">Vimal Jyothi Engineering College</span>
+                </div>
+                <span class="project-date">Nov 2024 · Part-time</span>
+                <span class="exp-location">Kannur, Kerala</span>
+                <p>Served as the Coordinator for Tantra '24, managing logistics and event execution.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Robotics Intern</div>
+                    <span class="company">Plasmid</span>
+                </div>
+                <span class="project-date">Jul 2024 - Sep 2024 · Part-time</span>
+                <span class="exp-location">Remote</span>
+                <p>Designed two projects in the field of Robotics. Gained experience in Robotic Arm implementation, Robotic Process Automation (RPA), and Robot Frameworks.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">Volunteer</div>
+                    <span class="company">Vimal Jyothi Engineering College</span>
+                </div>
+                <span class="project-date">Dec 2023 · Part-time</span>
+                <span class="exp-location">Kannur, Kerala · On-site</span>
+                <p>Volunteered for the ADS department during Tantra'23. Applied Knowledge Engineering and Java skills.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-header">
+                    <div class="role-title">AI Intern</div>
+                    <span class="company">Intrainz</span>
+                </div>
+                <span class="project-date">Jul 2023 - Sep 2023 · Part-time</span>
+                <span class="exp-location">Remote</span>
+                <p>Developed major and minor projects on Spam News Detection and Handwritten Digit Recognition using Python and Supervised Learning techniques.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="education">
+        <h2>Education & Certifications</h2>
+        <div class="edu-grid">
+            <div class="timeline-item">
+                <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                <div style="margin-top: 1rem;">
+                    <h4>B.Tech in AI & Data Science</h4>
+                    <p>Vimal Jyothi Engineering College</p>
+                    <p class="project-date">Current GPA: 8.48</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                <ul class="cert-list" style="margin-top: 1rem;">
+                    <li><i class="fas fa-check-circle"></i> IJSREM Recognition on "AI-powered Solar Tracker"</li>
+                    <li><i class="fas fa-check-circle"></i> AWS APAC - Solutions Architecture Job Simulation</li>
+                    <li><i class="fas fa-check-circle"></i> Data Science & AI Distinction (iStep/Deakin Univ)</li>
+                    <li><i class="fas fa-check-circle"></i> Deloitte Australia - Data Analytics Job Simulation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>Let's Connect</h2>
+        <p>Currently seeking challenging roles to develop cutting-edge AI solutions.</p>
+        
+        <div class="social-links">
+            <a href="mailto:vinayakrishnanc@gmail.com"><i class="fas fa-envelope"></i></a>
+            <a href="https://linkedin.com/in/vinayakrishnanc"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/VibrantVinay"><i class="fab fa-github"></i></a>
+            <a href="https://gitlab.com/vinay20041"><i class="fab fa-gitlab"></i></a>
+        </div>
+        <p style="margin-top: 2rem; font-size: 0.8rem; color: #475569;">© 2025 Vinayakrishnan C. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
