@@ -7,8 +7,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f3ff; /* Neon Cyan */
-            --secondary: #bc13fe; /* Neon Purple */
+            --primary: #00f3ff; 
+            --secondary: #bc13fe;
             --bg-dark: #02040a;
             --card-bg: rgba(10, 25, 47, 0.7);
             --text-main: #e2e8f0;
@@ -23,7 +23,6 @@
             font-family: 'Segoe UI', 'Courier New', monospace;
         }
 
-        /* Hide cursor only on desktop where drone exists */
         @media (hover: hover) and (pointer: fine) {
             * { cursor: none; }
         }
@@ -35,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND CANVAS --- */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -46,7 +44,6 @@
             background: radial-gradient(circle at center, #0a0f1c 0%, #000000 100%);
         }
 
-        /* --- DRONE CURSOR (Desktop Only) --- */
         .drone-cursor {
             position: fixed;
             top: 0;
@@ -95,7 +92,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* --- NAVIGATION --- */
         nav {
             background: rgba(2, 4, 10, 0.9);
             padding: 1rem 1.5rem;
@@ -126,7 +122,6 @@
             z-index: 102;
         }
 
-        /* Default Desktop Nav Links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -163,12 +158,11 @@
             width: 100%;
         }
 
-        /* --- HAMBURGER DEFAULT STYLES (Hidden on Desktop) --- */
         .hamburger {
             display: none;
             flex-direction: column;
             cursor: pointer;
-            z-index: 102; /* Ensures it stays on top of the menu */
+            z-index: 102; 
         }
 
         .bar {
@@ -179,7 +173,6 @@
             transition: 0.4s;
         }
 
-        /* --- HERO SECTION --- */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -200,7 +193,6 @@
             word-wrap: break-word;
         }
 
-        /* Glitch Effect */
         .glitch-text { position: relative; }
         
         .glitch-text::before, .glitch-text::after {
@@ -291,7 +283,6 @@
 
         .btn:hover::before { left: 0; }
 
-        /* --- SECTIONS --- */
         section {
             padding: 6rem 1rem;
             max-width: 1200px;
@@ -309,7 +300,6 @@
 
         h2 span { color: var(--primary); }
 
-        /* --- CARDS (Glassmorphism) --- */
         .skill-category, .project-card, .timeline-item {
             background: var(--card-bg);
             padding: 2rem;
@@ -338,7 +328,6 @@
             box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
         }
 
-        /* --- SKILLS --- */
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -371,7 +360,6 @@
             color: var(--bg-dark);
         }
 
-        /* --- PROJECTS --- */
         .project-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -396,7 +384,6 @@
             display: inline-block;
         }
 
-        /* --- TIMELINE --- */
         .timeline {
             position: relative;
             max-width: 900px;
@@ -422,7 +409,6 @@
         .role-title { font-weight: bold; font-size: 1.2rem; }
         .company { color: var(--primary); text-shadow: 0 0 5px rgba(0, 243, 255, 0.3); }
 
-        /* --- EDUCATION --- */
         .cert-list li {
             list-style: none;
             margin-bottom: 0.8rem;
@@ -436,7 +422,6 @@
             margin-top: 5px;
         }
 
-        /* --- FOOTER --- */
         footer {
             background: #000;
             padding: 4rem 1rem;
@@ -460,7 +445,6 @@
             text-shadow: 0 0 15px var(--primary);
         }
 
-        /* --- MOBILE MEDIA QUERIES (Triggers at 768px) --- */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.1rem; padding-left: 0.5rem; }
@@ -480,20 +464,17 @@
             
             .btn { width: 100%; }
 
-            /* --- NEW HAMBURGER MOBILE STYLES --- */
-            /* Show Hamburger */
             .hamburger {
                 display: flex;
             }
 
-            /* Style the Menu as a Sidebar/Drawer */
             .nav-links {
                 position: fixed;
                 top: 0;
-                right: -100%; /* Hidden off-screen to the right */
+                right: -100%; 
                 height: 100vh;
                 width: 70%;
-                background: rgba(2, 4, 10, 0.98); /* Mobile menu background */
+                background: rgba(2, 4, 10, 0.98);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
@@ -503,19 +484,16 @@
                 z-index: 101;
             }
 
-            /* Class added by JS to slide menu in */
             .nav-links.active {
                 right: 0;
             }
 
-            /* Link styling for mobile */
             .nav-links a {
                 font-size: 1.2rem;
                 margin: 1.5rem 0;
-                display: block; /* Ensures vertical stacking */
+                display: block;
             }
 
-            /* --- HAMBURGER TO 'X' ANIMATION --- */
             .hamburger.active .bar:nth-child(1) {
                 transform: rotate(-45deg) translate(-5px, 6px);
             }
@@ -753,19 +731,16 @@
     </footer>
 
     <script>
-        // --- NEW HAMBURGER LOGIC ---
-        // Select elements
+      
         const hamburger = document.querySelector('.hamburger');
         const navLinks = document.querySelector('.nav-links');
         const links = document.querySelectorAll('.nav-links a');
 
-        // Toggle Menu on Hamburger Click
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
         });
 
-        // Close menu when a specific link is clicked
         links.forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
@@ -773,7 +748,6 @@
             });
         });
 
-        // --- DRONE CURSOR LOGIC ---
         const drone = document.querySelector('.drone-cursor');
         
         let mouseX = 0;
@@ -787,20 +761,17 @@
         });
 
         function animateDrone() {
-            // Only calculate if visible
             if (getComputedStyle(drone).display === 'none') {
                 requestAnimationFrame(animateDrone);
                 return;
             }
 
-            // Smooth follow (Lerp)
             let distX = mouseX - droneX;
             let distY = mouseY - droneY;
             
             droneX = droneX + (distX * 0.1);
             droneY = droneY + (distY * 0.1);
             
-            // Calculate rotation based on movement
             let rotateX = distY * 0.1;
             let rotateY = distX * 0.1;
 
@@ -813,7 +784,6 @@
         animateDrone();
 
 
-        // --- NEURAL NETWORK BACKGROUND CANVAS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -823,7 +793,7 @@
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            initParticles(); // Re-init on resize to adjust density
+            initParticles(); 
         }
         
         window.addEventListener('resize', resize);
@@ -855,14 +825,13 @@
         
         function initParticles() {
             particles = [];
-            // Reduce particles on mobile for performance
             const particleCount = window.innerWidth < 768 ? 35 : 70;
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle());
             }
         }
         
-        resize(); // Initial call
+        resize();
         
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
@@ -871,7 +840,6 @@
                 particles[i].update();
                 particles[i].draw();
                 
-                // Draw connections (Neural Network style)
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
