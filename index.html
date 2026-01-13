@@ -237,9 +237,19 @@
             100% { clip: rect(2px, 9999px, 34px, 0); }
         }
 
+        /* --- UPDATED HERO PARAGRAPH STYLE --- */
         .hero p {
             font-size: 1.5rem;
-            color: var(--text-dim);
+            
+            /* UPDATED: White text */
+            color: #ffffff; 
+            
+            /* UPDATED: Glow Effect */
+            text-shadow: 
+                0 0 5px rgba(255, 255, 255, 0.8),  /* Inner slight white blur */
+                0 0 15px var(--primary),           /* Middle cyan glow */
+                0 0 30px rgba(0, 243, 255, 0.4);   /* Outer ambient glow */
+
             max-width: 800px;
             margin: 0 auto 2rem;
             border-left: 3px solid var(--primary);
