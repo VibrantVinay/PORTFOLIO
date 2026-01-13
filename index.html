@@ -58,10 +58,9 @@
             transform: translate(-50%, -50%);
             transition: transform 0.1s ease-out;
             will-change: transform, left, top;
-            display: none; /* Hidden by default, shown via media query */
+            display: none; 
         }
 
-        /* Show drone only on devices with a mouse */
         @media (hover: hover) and (pointer: fine) {
             .drone-cursor { display: block; }
         }
@@ -127,6 +126,7 @@
             z-index: 102;
         }
 
+        /* Default Desktop Nav Links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -163,12 +163,12 @@
             width: 100%;
         }
 
-        /* Hamburger Menu */
+        /* --- HAMBURGER DEFAULT STYLES (Hidden on Desktop) --- */
         .hamburger {
             display: none;
             flex-direction: column;
             cursor: pointer;
-            z-index: 102;
+            z-index: 102; /* Ensures it stays on top of the menu */
         }
 
         .bar {
@@ -460,41 +460,16 @@
             text-shadow: 0 0 15px var(--primary);
         }
 
-        /* --- MOBILE MEDIA QUERIES --- */
+        /* --- MOBILE MEDIA QUERIES (Triggers at 768px) --- */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.1rem; padding-left: 0.5rem; }
             h2 { font-size: 2rem; margin-bottom: 2rem; }
             
-            .hamburger { display: flex; }
-
-            .nav-links {
-                position: fixed;
-                right: -100%;
-                top: 0;
-                height: 100vh;
-                width: 70%;
-                background: rgba(2, 4, 10, 0.95);
-                flex-direction: column;
-                justify-content: center;
-                transition: 0.4s;
-                backdrop-filter: blur(15px);
-                border-left: 1px solid var(--primary);
-                box-shadow: -5px 0 20px rgba(0,0,0,0.5);
-                z-index: 101;
-            }
-
-            .nav-links.active { right: 0; }
-
-            .nav-links a {
-                margin: 2rem 0;
-                font-size: 1.2rem;
-            }
-
             .timeline::before { display: none; }
             
             .timeline-item {
-                border-left: 1px solid var(--primary); /* Maintain card look */
+                border-left: 1px solid var(--primary);
                 margin-left: 0;
             }
 
@@ -504,6 +479,52 @@
             section { padding: 4rem 1rem; }
             
             .btn { width: 100%; }
+
+            /* --- NEW HAMBURGER MOBILE STYLES --- */
+            /* Show Hamburger */
+            .hamburger {
+                display: flex;
+            }
+
+            /* Style the Menu as a Sidebar/Drawer */
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%; /* Hidden off-screen to the right */
+                height: 100vh;
+                width: 70%;
+                background: rgba(2, 4, 10, 0.98); /* Mobile menu background */
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: 0.4s ease-in-out;
+                border-left: 1px solid rgba(0, 243, 255, 0.2);
+                backdrop-filter: blur(15px);
+                z-index: 101;
+            }
+
+            /* Class added by JS to slide menu in */
+            .nav-links.active {
+                right: 0;
+            }
+
+            /* Link styling for mobile */
+            .nav-links a {
+                font-size: 1.2rem;
+                margin: 1.5rem 0;
+                display: block; /* Ensures vertical stacking */
+            }
+
+            /* --- HAMBURGER TO 'X' ANIMATION --- */
+            .hamburger.active .bar:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.active .bar:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
         }
     </style>
 </head>
@@ -522,18 +543,18 @@
     <nav>
         <div class="nav-content">
             <div class="logo">&lt;Vinay_AI /&gt;</div>
-            <div class="hamburger" onclick="toggleMenu()">
+            <div class="hamburger">
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
             <div class="nav-links">
-                <a href="#about" onclick="toggleMenu()">01. Initialize</a>
-                <a href="#skills" onclick="toggleMenu()">02. Arsenal</a>
-                <a href="#projects" onclick="toggleMenu()">03. Protocols</a>
-                <a href="#experience" onclick="toggleMenu()">04. Logs</a>
-                <a href="#education" onclick="toggleMenu()">05. Data</a>
-                <a href="#contact" onclick="toggleMenu()">06. Connect</a>
+                <a href="#about">01. Initialize</a>
+                <a href="#skills">02. Arsenal</a>
+                <a href="#projects">03. Protocols</a>
+                <a href="#experience">04. Logs</a>
+                <a href="#education">05. Data</a>
+                <a href="#contact">06. Connect</a>
             </div>
         </div>
     </nav>
@@ -732,12 +753,25 @@
     </footer>
 
     <script>
-        // --- MOBILE MENU LOGIC ---
-        function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            const hamburger = document.querySelector('.hamburger');
+        // --- NEW HAMBURGER LOGIC ---
+        // Select elements
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const links = document.querySelectorAll('.nav-links a');
+
+        // Toggle Menu on Hamburger Click
+        hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
-        }
+            hamburger.classList.toggle('active');
+        });
+
+        // Close menu when a specific link is clicked
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
 
         // --- DRONE CURSOR LOGIC ---
         const drone = document.querySelector('.drone-cursor');
